@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from '@/../web_model/model.json'
 import * as tf from '@tensorflow/tfjs';
 
 export default {
@@ -50,9 +50,9 @@ export default {
       let canvas = this.$refs['canvas']
       let ctx = canvas.getContext("2d");
       ctx.shadowColor = "white";
-      ctx.shadowBlur = 3
+      //ctx.shadowBlur = 3
       ctx.strokeStyle = "white";
-      ctx.lineWidth = 2
+      ctx.lineWidth = 3
 
       ctx.beginPath();
       ctx.moveTo(this.lastPosX, this.lastPosY);
