@@ -7,10 +7,6 @@ module.exports = {
         pathRewrite: {
           '^/api': '/', // rewrite path
         }
-      },
-      '^/web_model': {
-        target: 'http://localhost:9000',
-        changeOrigin: true
       }
     }
   }
