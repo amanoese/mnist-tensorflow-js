@@ -84,6 +84,7 @@ export default {
     this.graphModel.then(model=>{
       return this.mnistCalcuration()
     }).then(model=>{
+      console.log('initResult',model)
       this.resetCanvas()
       this.downLoadPercent = 100
     });
@@ -148,18 +149,16 @@ export default {
       this.lastPosX = null
       this.lastPosY = null
 
-      this.mnistCalcuration()
+      this.mnistCalcuration().then(result=>{
+        this.output = result.map(v=>v.toFixed(10))
+      })
     },
     mnistCalcuration(){
       return this.graphModel.then(model=>{
         let imgTensol = tf.browser.fromPixels(this.$refs['canvas'],1).reshape([-1,28,28]).div(tf.scalar(255)).reshape([-1,784]);
-        imgTensol.print();
-
         return model.predict(imgTensol)
           .flatten()
           .array()
-      }).then(result=>{
-        this.output = result.map(v=>v.toFixed(10))
       })
     }
   },
