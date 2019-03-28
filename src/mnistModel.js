@@ -5,8 +5,8 @@ import b64toBlob from  'b64-to-blob';
 import JSZip from 'jszip';
 
 export default {
-  load : async () => {
-    let { data:modelData } = await axios.get('/web_model/model.zip',{responseType:'blob'})
+  load : async (onDownloadProgress=_.noop) => {
+    let { data:modelData } = await axios.get('/web_model/model.zip',{responseType:'blob',onDownloadProgress})
     let zip = await new JSZip().loadAsync(modelData);
     let sortedZipFiles = [
       ...zip.filter((path,file)=>/model.json/.test(path)),

@@ -20,6 +20,18 @@
                 <svg viewBox="0, 0, 280, 280">
                   <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
                 </svg>
+                <div class="flex-center column circular" v-if="downLoadPercent < 100">
+                  <h2>Downloading model file...</h2>
+                  <p></p>
+                  <v-progress-circular
+                  :rotate="360"
+                  :size="150"
+                  :width="15"
+                  :value="downLoadPercent"
+                  color="teal">
+                    <h2>{{ downLoadPercent }}</h2>
+                  </v-progress-circular>
+                </div>
               </div>
             </v-flex>
             <v-flex xs12 class="flex-center">
@@ -62,16 +74,25 @@ import mnistModel from '@/mnistModel.js';
 export default {
   name: 'app',
   mounted(){
-    this.resetCanvas()
-    window.addEventListener('mouseup' ,this.offedit)
+    this.resetCanvas();
+    window.addEventListener('mouseup' ,this.offedit);
+
+    this.graphModel = mnistModel.load(({total,loaded})=>{
+      this.downLoadPercent = +(loaded/total*100).toFixed()
+      console.log(this.downLoadPercent)
+    }).then(model=>{
+      this.downLoadPercent = 100
+      return model
+    })
   },
   data(){
     return {
-      graphModel : mnistModel.load(),
       output: [],
       edit : false,
       lastPosX : null,
       lastPosY : null,
+      downLoadPercent : 0,
+      graphModel : null
     }
   },
   methods:{
@@ -165,6 +186,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  &.column {
+    flex-direction: column;
+    flex-wrap: wrap;
+ }
 }
 .content {
   position: relative;
@@ -174,13 +199,18 @@ export default {
     width:  100%;
     height: 100%;
   }
-  & svg {
+  & svg, & .circular {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+  }
+  & svg {
     pointer-events : none;
+  }
+  & .circular {
+    background-color: rgba(255,255,255,0.8);
   }
 }
 </style>
