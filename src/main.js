@@ -1,5 +1,6 @@
  /* eslint-disable */
 import Vue from 'vue'
+import './plugins/axios'
 import './plugins/vuetify'
 import App from './App.vue'
 

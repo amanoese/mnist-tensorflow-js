@@ -1,13 +1,13 @@
 import * as tf from '@tensorflow/tfjs';
 import _ from 'lodash';
+import axios from 'axios';
 import b64toBlob from  'b64-to-blob';
 import JSZip from 'jszip';
 
-const modelData = require('url-loader!@/../web_model/model.zip');
-
 export default {
   load : async () => {
-    let zip = await new JSZip().loadAsync(modelData.split(',')[1], {base64: true});
+    let { data:modelData } = await axios.get('/web_model/model.zip',{responseType:'blob'})
+    let zip = await new JSZip().loadAsync(modelData);
     let sortedZipFiles = [
       ...zip.filter((path,file)=>/model.json/.test(path)),
       ...zip.filter((path,file)=>!/model.json/.test(path))];
