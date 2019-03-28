@@ -78,12 +78,15 @@ export default {
     window.addEventListener('mouseup' ,this.offedit);
 
     this.graphModel = mnistModel.load(({total,loaded})=>{
-      this.downLoadPercent = +(loaded/total*100).toFixed()
-      console.log(this.downLoadPercent)
+      this.downLoadPercent = +(loaded/total*100).toFixed() - 1
+    });
+
+    this.graphModel.then(model=>{
+      return this.mnistCalcuration()
     }).then(model=>{
+      this.resetCanvas()
       this.downLoadPercent = 100
-      return model
-    })
+    });
   },
   data(){
     return {
@@ -148,11 +151,11 @@ export default {
       this.mnistCalcuration()
     },
     mnistCalcuration(){
-      this.graphModel.then(model=>{
-        let imgTensol = tf.browser.fromPixels(this.$refs['canvas'],1).reshape([-1,28,28]).div(tf.scalar(255));
+      return this.graphModel.then(model=>{
+        let imgTensol = tf.browser.fromPixels(this.$refs['canvas'],1).reshape([-1,28,28]).div(tf.scalar(255)).reshape([-1,784]);
         imgTensol.print();
 
-        return model.predict(imgTensol.reshape([-1,784]))
+        return model.predict(imgTensol)
           .flatten()
           .array()
       }).then(result=>{
