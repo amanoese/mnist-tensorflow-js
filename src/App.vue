@@ -145,7 +145,8 @@ export default {
         .map((v,i)=>[v,i])
         .sort(([a],[b])=>a<b?1:-1)
         .filter(([v])=>v>0)
-        .map(([v,i])=>i)[0] || NaN
+        .map(([v,i])=>i)
+        .concat([NaN])[0]
     }
   }
 }
