@@ -10,7 +10,14 @@
           <v-layout justify-center colmn wrap>
             <v-flex xs12 class="flex-center">
               <div class="content">
-                <canvas width="28" height="28" ref="canvas" @mousemove="canvasMouseMove" @mouseup="offedit" @mousedown="onedit"></canvas>
+                <canvas width="28" height="28" ref="canvas"
+                  @mousemove="canvasMouseMove"
+                  @touchmove.stop="canvasMouseMove"
+                  @touchend.stop="offedit"
+                  @mouseup="offedit"
+                  @touchstart.prevent="onedit"
+                  @click.prevent="onedit"
+                  @mousedown="onedit"></canvas>
                 <svg viewBox="0, 0, 280, 280">
                   <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
                 </svg>
@@ -53,7 +60,6 @@
 import * as tf from '@tensorflow/tfjs';
 import mnistModel from '@/mnistModel.js';
 
-console.log(mnistModel.load())
 export default {
   name: 'app',
   mounted(){
@@ -74,9 +80,9 @@ export default {
       if(!this.edit){ return }
       let clientRect = event.target.getBoundingClientRect();
       //console.log(event,event.clientX - clientRect.left, event.clientY - clientRect.top)
-      console.log(event.target.width )
-      let x =  (event.clientX - clientRect.left) * 28 / event.target.offsetWidth;
-      let y =  (event.clientY - clientRect.top ) * 28 / event.target.offsetHeight;
+      let x =  ((event.clientX || event.touches[0].clientX) - clientRect.left) * 28 / event.target.offsetWidth;
+      let y =  ((event.clientY || event.touches[0].clientY) - clientRect.top ) * 28 / event.target.offsetHeight;
+      //console.log(event,x,y)
 
       this.lastPosX = this.lastPosX || x
       this.lastPosY = this.lastPosY || y
@@ -86,7 +92,7 @@ export default {
       let canvas = this.$refs['canvas']
       let ctx = canvas.getContext("2d");
       ctx.shadowColor = "white";
-      ctx.shadowBlur = 2
+      ctx.shadowBlur = 1.5
       ctx.strokeStyle = "white";
       ctx.lineWidth = 2
       ctx.lineCap = "round";
@@ -108,6 +114,7 @@ export default {
       this.output = [0,0,0,0,0,0,0,0,0,0].map(v=>v.toFixed(10))
     },
     onedit(event){
+      console.log('startEdit')
       this.edit = true
     },
     offedit(){
