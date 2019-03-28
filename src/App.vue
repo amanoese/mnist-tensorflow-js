@@ -78,7 +78,8 @@ export default {
     window.addEventListener('mouseup' ,this.offedit);
 
     this.graphModel = mnistModel.load(({total,loaded})=>{
-      this.downLoadPercent = +(loaded/total*100).toFixed() - 1
+      this.downLoadPercent = +(loaded/total*100).toFixed() - 1 || 99
+      console.log(this.downLoadPercent)
     });
 
     this.graphModel.then(model=>{
