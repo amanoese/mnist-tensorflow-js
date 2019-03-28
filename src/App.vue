@@ -1,22 +1,52 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" @click="resetCanvas">
-    <br>
-    <div class="flex-center">
-      <div class="content">
-        <canvas width="28" height="28" ref="canvas" @mousemove="canvasMouseMove" @mouseup="offedit" @mousedown="onedit"></canvas>
-        <svg viewBox="0, 0, 280, 280">
-          <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
-        </svg>
-      </div>
-      <ul>
-        <li v-for="v,index in output">
-          <span v-if="index===maxNum" style="background-color:yellow">{{ index }} : {{ v }}</span>
-          <span v-else>{{ index }} : {{ v }}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <v-app id="app">
+    <v-toolbar>
+      <v-toolbar-side-icon></v-toolbar-side-icon>
+      <v-toolbar-title>MNIST TensorFlow.js</v-toolbar-title>
+    </v-toolbar>
+    <v-container>
+      <v-layout justify-center wrap>
+        <v-flex xs10 md5 sm5 pa-1>
+          <v-layout justify-center colmn wrap>
+            <v-flex xs12 class="flex-center">
+              <div class="content">
+                <canvas width="28" height="28" ref="canvas" @mousemove="canvasMouseMove" @mouseup="offedit" @mousedown="onedit"></canvas>
+                <svg viewBox="0, 0, 280, 280">
+                  <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
+                </svg>
+              </div>
+            </v-flex>
+            <v-flex xs12 class="flex-center">
+              <v-btn depressed color="primary" @click="resetCanvas">Reset</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+        <v-flex xs10 md5 sm5 pa-1>
+          <v-card>
+            <v-list>
+              <template v-for="item,index in output">
+
+                <v-list-tile class="pink lighten-5" v-if="index === maxNum">
+                  <v-list-tile-action>
+                    <v-icon color="pink">star</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-title v-text="index"></v-list-tile-title>
+                  <v-list-tile-title v-text="item"></v-list-tile-title>
+                </v-list-tile>
+
+                <v-list-tile v-else>
+                  <v-list-tile-action></v-list-tile-action>
+                  <v-list-tile-title v-text="index"></v-list-tile-title>
+                  <v-list-tile-title v-text="item"></v-list-tile-title>
+                </v-list-tile>
+
+              </template>
+            </v-list>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -33,7 +63,7 @@ export default {
   data(){
     return {
       graphModel : mnistModel.load(),
-      output: [0,0,0,0,0,0,0,0,0,0],
+      output: [],
       edit : false,
       lastPosX : null,
       lastPosY : null,
@@ -44,9 +74,9 @@ export default {
       if(!this.edit){ return }
       let clientRect = event.target.getBoundingClientRect();
       //console.log(event,event.clientX - clientRect.left, event.clientY - clientRect.top)
-      //console.log(clientRect)
-      let x =  (event.clientX - clientRect.left) / 10;
-      let y =  (event.clientY - clientRect.top ) / 10;
+      console.log(event.target.width )
+      let x =  (event.clientX - clientRect.left) * 28 / event.target.offsetWidth;
+      let y =  (event.clientY - clientRect.top ) * 28 / event.target.offsetHeight;
 
       this.lastPosX = this.lastPosX || x
       this.lastPosY = this.lastPosY || y
@@ -75,6 +105,7 @@ export default {
       var ctx = canvas.getContext("2d");
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      this.output = [0,0,0,0,0,0,0,0,0,0].map(v=>v.toFixed(10))
     },
     onedit(event){
       this.edit = true
@@ -107,20 +138,21 @@ export default {
       return this.output
         .map((v,i)=>[v,i])
         .sort(([a],[b])=>a<b?1:-1)
-        .map(([v,i])=>i)[0]
+        .filter(([v])=>v>0)
+        .map(([v,i])=>i)[0] || NaN
     }
   }
 }
 </script>
 
 <style lang="scss">
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 .flex-center {
   display: flex;
@@ -129,9 +161,11 @@ export default {
 }
 .content {
   position: relative;
-  & canvas, & svg {
-    width: 280px;
-    height: 280px;
+  width:  100%;
+  height: 100%;
+  & > * {
+    width:  100%;
+    height: 100%;
   }
   & svg {
     position: absolute;
