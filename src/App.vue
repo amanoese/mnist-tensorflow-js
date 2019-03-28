@@ -3,7 +3,12 @@
     <img alt="Vue logo" src="./assets/logo.png" @click="resetCanvas">
     <br>
     <div class="flex-center">
-      <canvas width="28" height="28" ref="canvas" @mousemove="canvasMouseMove" @mouseup="offedit" @mousedown="onedit"  style="width: 280px; height: 280px;"></canvas>
+      <div class="content">
+        <canvas width="28" height="28" ref="canvas" @mousemove="canvasMouseMove" @mouseup="offedit" @mousedown="onedit"></canvas>
+        <svg viewBox="0, 0, 280, 280">
+          <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
+        </svg>
+      </div>
       <ul>
         <li v-for="v,index in output">
           <span v-if="index===maxNum" style="background-color:yellow">{{ index }} : {{ v }}</span>
@@ -108,7 +113,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -121,5 +126,20 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.content {
+  position: relative;
+  & canvas, & svg {
+    width: 280px;
+    height: 280px;
+  }
+  & svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events : none;
+  }
 }
 </style>
