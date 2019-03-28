@@ -16,7 +16,6 @@
                   @touchend.stop="offedit"
                   @mouseup="offedit"
                   @touchstart.prevent="onedit"
-                  @click.prevent="onedit"
                   @mousedown="onedit"></canvas>
                 <svg viewBox="0, 0, 280, 280">
                   <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
