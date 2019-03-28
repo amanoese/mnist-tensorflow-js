@@ -15,9 +15,10 @@
 </template>
 
 <script>
-import HelloWorld from '@/../web_model/model.json'
 import * as tf from '@tensorflow/tfjs';
+import mnistModel from '@/mnistModel.js';
 
+console.log(mnistModel.load())
 export default {
   name: 'app',
   mounted(){
@@ -26,7 +27,7 @@ export default {
   },
   data(){
     return {
-      graphModel : tf.loadGraphModel('/api/model.json'),
+      graphModel : mnistModel.load(),
       output: [0,0,0,0,0,0,0,0,0,0],
       edit : false,
       lastPosX : null,
@@ -50,9 +51,10 @@ export default {
       let canvas = this.$refs['canvas']
       let ctx = canvas.getContext("2d");
       ctx.shadowColor = "white";
-      //ctx.shadowBlur = 3
+      ctx.shadowBlur = 2
       ctx.strokeStyle = "white";
-      ctx.lineWidth = 3
+      ctx.lineWidth = 2
+      ctx.lineCap = "round";
 
       ctx.beginPath();
       ctx.moveTo(this.lastPosX, this.lastPosY);
@@ -102,9 +104,6 @@ export default {
         .sort(([a],[b])=>a<b?1:-1)
         .map(([v,i])=>i)[0]
     }
-  },
-  components: {
-    HelloWorld
   }
 }
 </script>
