@@ -84,6 +84,7 @@ export default {
     });
 
     this.graphModel.then(model=>{
+      this.downLoadPercent = 100
       return this.mnistCalcuration()
     }).then(model=>{
       console.log('initResult',model)
