@@ -21,8 +21,8 @@
                   <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
                 </svg>
                 <div class="flex-center column circular" v-if="!isDownLoaded">
-                  <h2 v-if="downLoadPercent < 100">Downloading Graph Model ...</h2>
-                  <h2 v-else>Loading Graph Model to TensorFlow.js ...</h2>
+                  <h2 v-if="downLoadPercent < 100">Downloading Model Datas ...</h2>
+                  <h2 v-else>Loading Model to TensorFlow.js ...</h2>
                   <p></p>
                   <v-progress-circular
                     :rotate="360"
