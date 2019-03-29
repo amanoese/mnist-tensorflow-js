@@ -20,14 +20,15 @@
                 <svg viewBox="0, 0, 280, 280">
                   <rect x="40" y="40" width="200" height="200" stroke="pink" stroke-width="1" stroke-dasharray="4 4" fill="none" />
                 </svg>
-                <div class="flex-center column circular" v-if="downLoadPercent < 100">
-                  <h2>Downloading model file...</h2>
+                <div class="flex-center column circular" v-if="!isDownLoaded">
+                  <h2 v-if="downLoadPercent < 100">Downloading Graph Model ...</h2>
+                  <h2 v-else>Loading Graph Model to TensorFlow.js ...</h2>
                   <p></p>
                   <v-progress-circular
-                  :rotate="360"
-                  :size="150"
-                  :width="15"
-                  :value="downLoadPercent"
+                    :rotate="360"
+                    :size="150"
+                    :width="15"
+                    :value="downLoadPercent"
                   color="teal">
                     <h2>{{ downLoadPercent }}</h2>
                   </v-progress-circular>
@@ -79,7 +80,7 @@ export default {
 
     this.graphModel = mnistModel.load(({total,loaded})=>{
       let maybeTotal = total || (2 ** 20 * 12); // if 12MiB
-      this.downLoadPercent = _.min([loaded * 100 / maybeTotal, 99]).toFixed();
+      this.downLoadPercent = _.min([loaded * 100 / maybeTotal, 100]).toFixed();
     });
 
     this.graphModel.then(model=>{
@@ -87,7 +88,8 @@ export default {
     }).then(model=>{
       console.log('initResult',model)
       this.resetCanvas()
-      this.downLoadPercent = 100
+      setTimeout(()=>{this.isDownLoaded = true},3 * 1000)
+      //this.isDownLoaded = true
     });
   },
   data(){
@@ -97,6 +99,7 @@ export default {
       lastPosX : null,
       lastPosY : null,
       downLoadPercent : 0,
+      isDownLoaded : false,
       graphModel : null
     }
   },
