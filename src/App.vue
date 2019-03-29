@@ -79,7 +79,7 @@ export default {
 
     this.graphModel = mnistModel.load(({total,loaded})=>{
       let maybeTotal = total || (2 ** 20 * 12); // if 12MiB
-      this.downLoadPercent = (loaded * 100 / maybeTotal).toFixed();
+      this.downLoadPercent = _.min([loaded * 100 / maybeTotal, 99]).toFixed();
     });
 
     this.graphModel.then(model=>{
@@ -213,7 +213,7 @@ export default {
     pointer-events : none;
   }
   & .circular {
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255,255,255,0.9);
   }
 }
 </style>
