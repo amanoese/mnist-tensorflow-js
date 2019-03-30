@@ -160,8 +160,8 @@ export default {
     },
     mnistCalcuration(){
       return this.graphModel.then(model=>{
-        let imgTensol = tf.browser.fromPixels(this.$refs['canvas'],1).reshape([-1,28,28]).div(tf.scalar(255)).reshape([-1,784]);
-        return model.predict(imgTensol)
+        let imgTensol = tf.browser.fromPixels(this.$refs['canvas'],1).reshape([1,784]).div(tf.scalar(255));
+        return model.predict(imgTensol,{ batchSize : 1 })
           .flatten()
           .array()
       })
