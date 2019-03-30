@@ -79,7 +79,7 @@ export default {
     window.addEventListener('mouseup' ,this.offedit);
 
     this.graphModel = mnistModel.load(({total,loaded})=>{
-      let maybeTotal = !total || 12137690; // if 12MiB
+      let maybeTotal = total || 12137690; // if 12MiB
       this.downLoadPercent = _.min([loaded * 100 / maybeTotal, 100]).toFixed();
     });
 
