@@ -79,7 +79,7 @@ export default {
     window.addEventListener('mouseup' ,this.offedit);
 
     this.graphModel = mnistModel.load(({total,loaded})=>{
-      let maybeTotal = total || (2 ** 20 * 12); // if 12MiB
+      let maybeTotal = !total || 12137690; // if 12MiB
       this.downLoadPercent = _.min([loaded * 100 / maybeTotal, 100]).toFixed();
     });
 
@@ -87,10 +87,9 @@ export default {
       this.downLoadPercent = 100
       return this.mnistCalcuration()
     }).then(model=>{
-      console.log('initResult',model)
+      //console.log('initResult',model)
       this.resetCanvas()
-      setTimeout(()=>{this.isDownLoaded = true},3 * 1000)
-      //this.isDownLoaded = true
+      this.isDownLoaded = true
     });
   },
   data(){
